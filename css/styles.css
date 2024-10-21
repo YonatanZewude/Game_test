@@ -257,11 +257,11 @@ body {
     max-width: 70px;
     max-height: 70px;
     user-select: none; /* Förhindra markering */
-    -webkit-user-select: none; /* Safari */
-    -moz-user-select: none; /* Firefox */
-    -ms-user-select: none; /* IE/Edge */
+    /* -webkit-user-select: none; 
+    -moz-user-select: none; 
+    -ms-user-select: none; 
 
-    /* Låt fortfarande pekinteraktioner fungera (t.ex. dragning) */
+    Låt fortfarande pekinteraktioner fungera (t.ex. dragning) */
     pointer-events: auto; /* Tillåt alla händelser */
     touch-action: manipulation;
   }
