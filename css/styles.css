@@ -21,9 +21,6 @@ body {
     rgba(116, 114, 12, 0.342) 71%
   );
   width: 100%;
-  user-select: none;
-  -webkit-user-select: none;
-  -ms-user-select: none;
 }
 
 .header {
@@ -161,14 +158,6 @@ body {
     inset 0 4px 6px rgba(255, 255, 255, 0.2);
   aspect-ratio: 1 / 1;
   perspective: 1000px;
-  user-select: none; /* Förhindra markering */
-  -webkit-user-select: none; /* Safari */
-  -moz-user-select: none; /* Firefox */
-  -ms-user-select: none; /* IE/Edge */
-
-  /* Låt fortfarande pekinteraktioner fungera (t.ex. dragning) */
-  pointer-events: auto; /* Tillåt alla händelser */
-  touch-action: manipulation;
 }
 
 .cell:hover {
@@ -189,8 +178,6 @@ body {
   max-width: 70px;
   max-height: 70px;
   object-fit: contain;
-  user-select: none; /* Förhindra markering */
-  -webkit-user-select: none; /* Safari */
 }
 
 #reset_button_section {
