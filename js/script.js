@@ -53,6 +53,9 @@ const scoreDisplay = document.getElementById("score");
 const movesDisplay = document.getElementById("moves");
 const goalsSection = document.getElementById("goalsSection");
 const movesSection = document.getElementById("movesSection");
+const isMobile =
+  "ontouchstart" in window ||
+  /Mobi|Android|iPhone|iPad|iPod|Windows Phone/i.test(navigator.userAgent);
 
 window.onload = function () {
   // Förhindra långtryck och aktivering av standardkontextmenyn
@@ -118,23 +121,20 @@ function resetGameVersion1() {
 
 function createBoard() {
   board.innerHTML = "";
-
   for (let i = 0; i < totalCells; i++) {
     const cell = document.createElement("div");
     cell.className = "cell";
-
-    // Här lägger du till din bild och inaktiverar dragningen
+    cell.setAttribute("draggable", true);
     const imgElement = document.createElement("img");
     imgElement.src = getRandomEmoji();
-    imgElement.setAttribute("draggable", "false"); // Inaktivera drag-funktionen
     cell.appendChild(imgElement);
-
-    // Lägg till övriga event-lyssnare för celler
-    cell.addEventListener("touchstart", handleTouchStart, { passive: false });
-    cell.addEventListener("touchmove", handleTouchMove, { passive: false });
-    cell.addEventListener("touchend", handleTouchEnd);
-
-    // Lägg till cellen i brädet
+    board.addEventListener("dragstart", handleDragStart);
+    board.addEventListener("dragover", handleDragOver);
+    board.addEventListener("drop", handleDrop);
+    board.addEventListener("dragend", handleDragEnd);
+    board.addEventListener("touchstart", handleTouchStart, { passive: true });
+    board.addEventListener("touchmove", handleTouchMove, { passive: true });
+    board.addEventListener("touchend", handleTouchEnd), { passive: true };
     board.appendChild(cell);
   }
 }
