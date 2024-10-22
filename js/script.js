@@ -47,6 +47,7 @@ let originalCell = null;
 let touchElement = null;
 let placeholder = null;
 let gameMode = "Version1"; // Default version
+let activeTouchId = null;
 
 const scoreDisplay = document.getElementById("score");
 const movesDisplay = document.getElementById("moves");
@@ -221,13 +222,16 @@ function handleDragEnd(event) {
 function returnEmojiToOriginalCell() {
   originalCell.querySelector("img").style.visibility = "visible";
 }
-
 function handleTouchStart(event) {
+  if (event.touches.length > 1) return; // Ignorera ytterligare fingrar
+
   const touch = event.touches[0];
+  activeTouchId = touch.identifier; // Spara den första touchens identifierare
 
   draggedElement = document
     .elementFromPoint(touch.clientX, touch.clientY)
     ?.closest(".cell");
+
   if (draggedElement) {
     const imgElement = draggedElement.querySelector("img");
 
@@ -242,21 +246,15 @@ function handleTouchStart(event) {
     } else {
       console.error("Inget <img> element hittades i den valda cellen.");
     }
-  } else {
   }
 }
 
 function handleTouchMove(event) {
-  const touch = event.touches[0];
-  movePlaceholder(touch.clientX, touch.clientY);
-  touchElement = document
-    .elementFromPoint(touch.clientX, touch.clientY)
-    .closest(".cell");
-}
+  const touch = Array.from(event.touches).find(
+    (t) => t.identifier === activeTouchId
+  );
+  if (!touch) return; // Ignorera om den aktuella touch-händelsen inte är den aktiva
 
-function handleTouchMoveWithPreventDefault(event) {
-  event.preventDefault();
-  const touch = event.touches[0];
   movePlaceholder(touch.clientX, touch.clientY);
   touchElement = document
     .elementFromPoint(touch.clientX, touch.clientY)
@@ -264,6 +262,11 @@ function handleTouchMoveWithPreventDefault(event) {
 }
 
 function handleTouchEnd(event) {
+  const touch = Array.from(event.changedTouches).find(
+    (t) => t.identifier === activeTouchId
+  );
+  if (!touch) return; // Ignorera om den aktuella touch-händelsen inte är den aktiva
+
   removeAllMatchedClasses();
 
   if (touchElement && touchElement !== originalCell) {
@@ -297,6 +300,7 @@ function handleTouchEnd(event) {
   }
 
   cleanupTouchElements();
+  activeTouchId = null; // Nollställ den aktiva touch-händelsen
 }
 
 function updateMovesAndProgress() {
@@ -438,9 +442,7 @@ function resetGame() {
 }
 
 createBoard();
-document.body.addEventListener("touchmove", handleTouchMoveWithPreventDefault, {
-  passive: false,
-});
+
 document.getElementById("modalButton").addEventListener("click", hideModal);
 document.querySelector(".modal .close").addEventListener("click", hideModal);
 window.addEventListener("click", (event) => {
