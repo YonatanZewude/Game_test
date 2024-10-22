@@ -139,6 +139,10 @@ function createBoard() {
   }
 }
 
+document.addEventListener("selectstart", function (e) {
+  e.preventDefault(); // Förhindra markering av innehåll
+});
+
 function initVersion2() {
   gameMode = "Version2";
   score = 0;
