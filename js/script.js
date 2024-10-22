@@ -54,6 +54,23 @@ const movesDisplay = document.getElementById("moves");
 const goalsSection = document.getElementById("goalsSection");
 const movesSection = document.getElementById("movesSection");
 
+window.onload = function () {
+  // Förhindra långtryck och aktivering av standardkontextmenyn
+  document.addEventListener("contextmenu", function (event) {
+    event.preventDefault(); // Förhindra att långtryck aktiverar standardkontextmenyn
+  });
+
+  document.querySelectorAll("img").forEach((img) => {
+    img.addEventListener(
+      "touchstart",
+      function (e) {
+        e.preventDefault(); // Förhindra standardbeteendet vid touchstart
+      },
+      { passive: false }
+    );
+  });
+};
+
 // const moveButton = document.getElementById("Limited_number_of_moves");
 // moveButton.addEventListener("click", () => {
 //   gameMode = "Version 1";
@@ -98,33 +115,30 @@ function resetGameVersion1() {
 
   createBoard();
 }
-// Create game board with random images in each cell
+
 function createBoard() {
   board.innerHTML = "";
 
   for (let i = 0; i < totalCells; i++) {
     const cell = document.createElement("div");
     cell.className = "cell";
-    cell.setAttribute("draggable", true);
+
+    // Här lägger du till din bild och inaktiverar dragningen
     const imgElement = document.createElement("img");
     imgElement.src = getRandomEmoji();
-    imgElement.setAttribute("draggable", "false");
+    imgElement.setAttribute("draggable", "false"); // Inaktivera drag-funktionen
     cell.appendChild(imgElement);
 
-    imgElement.src = getRandomEmoji();
-    cell.appendChild(imgElement);
-    board.addEventListener("dragstart", handleDragStart);
-    board.addEventListener("dragover", handleDragOver);
-    board.addEventListener("drop", handleDrop);
-    board.addEventListener("dragend", handleDragEnd);
+    // Lägg till övriga event-lyssnare för celler
+    cell.addEventListener("touchstart", handleTouchStart, { passive: false });
+    cell.addEventListener("touchmove", handleTouchMove, { passive: false });
+    cell.addEventListener("touchend", handleTouchEnd);
 
-    board.addEventListener("touchstart", handleTouchStart, { passive: true });
-    board.addEventListener("touchmove", handleTouchMove, { passive: true });
-    board.addEventListener("touchend", handleTouchEnd), { passive: true };
-
+    // Lägg till cellen i brädet
     board.appendChild(cell);
   }
 }
+
 function initVersion2() {
   gameMode = "Version2";
   score = 0;
@@ -138,20 +152,6 @@ function initVersion2() {
 
   createBoard();
 }
-
-document.addEventListener("contextmenu", function (event) {
-  event.preventDefault(); // Förhindra att långtryck aktiverar standardkontextmenyn
-});
-
-document.querySelectorAll("img").forEach((img) => {
-  img.addEventListener(
-    "touchstart",
-    function (e) {
-      e.preventDefault(); // Förhindra standardbeteendet vid touchstart
-    },
-    { passive: false }
-  );
-});
 
 function checkGameOver() {
   if (gameMode === "Version1") {
