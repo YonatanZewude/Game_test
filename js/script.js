@@ -250,10 +250,11 @@ function handleTouchStart(event) {
 }
 
 function handleTouchMove(event) {
+  event.preventDefault(); // Förhindra att sidan dras vid touch-move
   const touch = Array.from(event.touches).find(
     (t) => t.identifier === activeTouchId
   );
-  if (!touch) return; // Ignorera om den aktuella touch-händelsen inte är den aktiva
+  if (!touch) return;
 
   movePlaceholder(touch.clientX, touch.clientY);
   touchElement = document
