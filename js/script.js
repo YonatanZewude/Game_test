@@ -107,6 +107,9 @@ function createBoard() {
     cell.className = "cell";
     cell.setAttribute("draggable", true);
     const imgElement = document.createElement("img");
+    imgElement.src = getRandomEmoji();
+    imgElement.setAttribute("draggable", "false");
+    cell.appendChild(imgElement);
 
     imgElement.src = getRandomEmoji();
     cell.appendChild(imgElement);
@@ -135,6 +138,20 @@ function initVersion2() {
 
   createBoard();
 }
+
+document.addEventListener("contextmenu", function (event) {
+  event.preventDefault(); // Förhindra att långtryck aktiverar standardkontextmenyn
+});
+
+document.querySelectorAll("img").forEach((img) => {
+  img.addEventListener(
+    "touchstart",
+    function (e) {
+      e.preventDefault(); // Förhindra standardbeteendet vid touchstart
+    },
+    { passive: false }
+  );
+});
 
 function checkGameOver() {
   if (gameMode === "Version1") {
@@ -261,7 +278,6 @@ function handleTouchMove(event) {
     .elementFromPoint(touch.clientX, touch.clientY)
     .closest(".cell");
 }
-
 function handleTouchEnd(event) {
   const touch = Array.from(event.changedTouches).find(
     (t) => t.identifier === activeTouchId
@@ -298,6 +314,9 @@ function handleTouchEnd(event) {
     } else {
       returnEmojiToOriginalCell();
     }
+  } else {
+    // Om användaren släpper på en ogiltig plats, återställ bilden
+    returnEmojiToOriginalCell();
   }
 
   cleanupTouchElements();
