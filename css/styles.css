@@ -179,6 +179,7 @@ body {
   max-width: 70px;
   max-height: 70px;
   object-fit: contain;
+  user-select: none;
 }
 
 #reset_button_section {
