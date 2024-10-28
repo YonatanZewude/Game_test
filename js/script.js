@@ -80,6 +80,27 @@ window.onload = function () {
 //   gameMode = "Version2";
 //   initVersion2();
 // });
+function initVersion3() {
+  gameMode = "Version3";
+  score = 0;
+  moves = Infinity; // Sätt obegränsat antal drag om du vill
+
+  movesSection.style.display = "none"; // Dölj moves-sektionen om den inte används
+  goalsSection.style.display = "none"; // Dölj goals-sektionen om den inte används
+
+  scoreDisplay.textContent = score;
+  createBoard(); // Skapa spelbrädet
+}
+
+function refillEmptyCells() {
+  const emptyCells = document.querySelectorAll(".cell img[src='']");
+  emptyCells.forEach((imgElement) => {
+    imgElement.src = getRandomEmoji(); // Ersätt med en slumpmässig emoji
+  });
+}
+
+const version3Button = document.getElementById("Version3Button");
+version3Button.addEventListener("click", initVersion3);
 
 function switchGameMode() {
   if (gameMode === "Version 1") {
@@ -212,9 +233,21 @@ function handleDrop(event) {
     targetCell.addEventListener("animationend", removeMatchedClass);
     targetCell.addEventListener("transitionend", removeMatchedClass);
 
-    const nextEmojis = getNextTwoEmojis(draggedEmoji);
-    originalCell.querySelector("img").src = nextEmojis[0];
-    targetCell.querySelector("img").src = nextEmojis[1];
+    if (gameMode === "Version3") {
+      // Gör cellerna tomma istället för att fylla dem med nya bilder
+      originalCell.querySelector("img").src = "";
+      targetCell.querySelector("img").src = "";
+
+      // Kontrollera om den matchade bilden är "imagePaths.drink"
+      if (draggedEmoji === imagePaths.drink) {
+        refillEmptyCells();
+      }
+    } else {
+      // För övriga versioner, sätt nya bilder som tidigare
+      const nextEmojis = getNextTwoEmojis(draggedEmoji);
+      originalCell.querySelector("img").src = nextEmojis[0];
+      targetCell.querySelector("img").src = nextEmojis[1];
+    }
 
     checkGameOver();
   } else {

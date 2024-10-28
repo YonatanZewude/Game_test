@@ -186,6 +186,14 @@ body {
   user-select: none;
 }
 
+.cell img[src=""] {
+  display: none;
+}
+
+.cell img:not([src]) {
+  display: none;
+}
+
 #reset_button_section {
   text-align: center;
 }
@@ -217,6 +225,22 @@ body {
 #resetButton:active {
   background-color: #004080;
 }
+.cell img {
+  width: 100%;
+  height: 100%;
+  max-width: 70px;
+  max-height: 70px;
+  object-fit: contain;
+  user-select: none;
+}
+
+.cell img[src=""] {
+  display: none;
+}
+
+.cell img:not([src]) {
+  display: none;
+}
 
 @media (max-width: 600px) {
   body {
@@ -238,17 +262,13 @@ body {
   .cell {
     font-size: clamp(2rem, 3vw, 3.5rem);
   }
-  .cell img {
-    width: 50px;
-    height: 50px;
-    max-width: 70px;
-    max-height: 70px;
-    user-select: none; /* Förhindra markering */
-    /* -webkit-user-select: none; 
-    -moz-user-select: none; 
-    -ms-user-select: none; 
 
-    Låt fortfarande pekinteraktioner fungera (t.ex. dragning) */
+  .cell img {
+    width: 40px; /* Anpassa till mindre skärmstorlekar */
+    height: 40px;
+    max-width: 50px;
+    max-height: 50px;
+    user-select: none; /* Förhindra markering */
   }
 
   #resetButton {
