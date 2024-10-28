@@ -1,4 +1,3 @@
-// Global variable for image paths
 const imagePaths = {
   blueberry: "https://content.adoveodemo.com/1729499244809_1.png",
   strawberry: "https://content.adoveodemo.com/1729499250486_2.png",
@@ -9,8 +8,6 @@ const imagePaths = {
   watermelon: "https://content.adoveodemo.com/1729499281547_7.png",
   drink: "https://content.adoveodemo.com/1729499295834_8.png",
 };
-
-// Array with all image paths for the game
 
 const emojiSequence = [
   imagePaths.blueberry,
@@ -23,7 +20,6 @@ const emojiSequence = [
   imagePaths.drink,
 ];
 
-// Score values for each image
 const scoreValues = {
   [imagePaths.blueberry]: 1,
   [imagePaths.strawberry]: 2,
@@ -46,7 +42,7 @@ let originalContent = "";
 let originalCell = null;
 let touchElement = null;
 let placeholder = null;
-let gameMode = "Version1"; // Default version
+let gameMode = "Version1";
 let activeTouchId = null;
 
 const scoreDisplay = document.getElementById("score");
@@ -58,16 +54,15 @@ const isMobile =
   /Mobi|Android|iPhone|iPad|iPod|Windows Phone/i.test(navigator.userAgent);
 
 window.onload = function () {
-  // Förhindra långtryck och aktivering av standardkontextmenyn
   document.addEventListener("contextmenu", function (event) {
-    event.preventDefault(); // Förhindra att långtryck aktiverar standardkontextmenyn
+    event.preventDefault();
   });
 
   document.querySelectorAll("img").forEach((img) => {
     img.addEventListener(
       "touchstart",
       function (e) {
-        e.preventDefault(); // Förhindra standardbeteendet vid touchstart
+        e.preventDefault();
       },
       { passive: false }
     );
@@ -132,7 +127,6 @@ function createBoard() {
     board.addEventListener("dragover", handleDragOver);
     board.addEventListener("drop", handleDrop);
     board.addEventListener("dragend", handleDragEnd);
-    // Ändra de berörda delarna av koden i script.js
     board.addEventListener("touchstart", handleTouchStart, { passive: false });
     board.addEventListener("touchmove", handleTouchMove, { passive: false });
     board.addEventListener("touchend", handleTouchEnd, { passive: false });
@@ -142,7 +136,7 @@ function createBoard() {
 }
 
 document.addEventListener("selectstart", function (e) {
-  e.preventDefault(); // Förhindra markering av innehåll
+  e.preventDefault();
 });
 
 function initVersion2() {
@@ -154,7 +148,6 @@ function initVersion2() {
   goalsSection.style.display = "block";
 
   scoreDisplay.textContent = score;
-  // document.getElementById("progress-bar").style.width = "0%";
 
   createBoard();
 }
@@ -210,8 +203,6 @@ function handleDrop(event) {
     moves--;
     document.getElementById("moves").textContent = moves;
 
-    //updateProgressBarBasedOnMoves();
-
     draggedElement.classList.add("matched");
     targetCell.classList.add("matched");
 
@@ -246,10 +237,10 @@ function returnEmojiToOriginalCell() {
   originalCell.querySelector("img").style.visibility = "visible";
 }
 function handleTouchStart(event) {
-  if (event.touches.length > 1) return; // Ignorera ytterligare fingrar
+  if (event.touches.length > 1) return;
 
   const touch = event.touches[0];
-  activeTouchId = touch.identifier; // Spara den första touchens identifierare
+  activeTouchId = touch.identifier;
 
   draggedElement = document
     .elementFromPoint(touch.clientX, touch.clientY)
@@ -273,18 +264,15 @@ function handleTouchStart(event) {
 }
 
 function handleTouchMove(event) {
-  event.preventDefault(); // Förhindra att sidan dras vid touch-move
+  event.preventDefault();
 
-  // Hämta aktuell touch-punkt baserat på aktiv touch-id
   const touch = Array.from(event.touches).find(
     (t) => t.identifier === activeTouchId
   );
   if (!touch) return;
 
-  // Flytta visuell representation av objektet (placeholder) till beröringskoordinater
   movePlaceholder(touch.clientX, touch.clientY);
 
-  // Hitta den cell som pekaren är över
   touchElement = document
     .elementFromPoint(touch.clientX, touch.clientY)
     ?.closest(".cell");
@@ -294,7 +282,7 @@ function handleTouchEnd(event) {
   const touch = Array.from(event.changedTouches).find(
     (t) => t.identifier === activeTouchId
   );
-  if (!touch) return; // Ignorera om den aktuella touch-händelsen inte är den aktiva
+  if (!touch) return;
 
   removeAllMatchedClasses();
 
@@ -327,18 +315,16 @@ function handleTouchEnd(event) {
       returnEmojiToOriginalCell();
     }
   } else {
-    // Om användaren släpper på en ogiltig plats, återställ bilden
     returnEmojiToOriginalCell();
   }
 
   cleanupTouchElements();
-  activeTouchId = null; // Nollställ den aktiva touch-händelsen
+  activeTouchId = null;
 }
 
 function updateMovesAndProgress() {
   moves--;
   document.getElementById("moves").textContent = moves;
-  //updateProgressBarBasedOnMoves();
 }
 
 function updateEmojiImages(nextDraggedEmoji, nextTargetEmoji) {
@@ -371,7 +357,6 @@ function removeAllMatchedClasses() {
   });
 }
 
-// Create a visual placeholder for the dragged element
 function createPlaceholder(src) {
   const placeholder = document.createElement("img");
   placeholder.src = src;
@@ -391,9 +376,6 @@ function createPlaceholder(src) {
 // }
 
 function movePlaceholder(x, y) {
-  if (!placeholder) return; // Kontrollera om placeholder finns innan du ändrar position
-
-  // Placera objektet i rätt position baserat på pekkoordinater
   placeholder.style.left = `${x - placeholder.width / 2}px`;
   placeholder.style.top = `${y - placeholder.height / 2}px`;
 }
@@ -413,7 +395,6 @@ function throttle(func, limit) {
 
 document.body.addEventListener("touchmove", throttle(handleTouchMove, 100));
 
-// Get the next two emojis based on the matched emoji
 function getNextTwoEmojis(matchedEmoji) {
   const fileName = matchedEmoji.split("/").pop();
   const matchedIndex = emojiSequence.findIndex((image) =>
