@@ -274,16 +274,22 @@ function handleTouchStart(event) {
 
 function handleTouchMove(event) {
   event.preventDefault(); // Förhindra att sidan dras vid touch-move
+
+  // Hämta aktuell touch-punkt baserat på aktiv touch-id
   const touch = Array.from(event.touches).find(
     (t) => t.identifier === activeTouchId
   );
   if (!touch) return;
 
+  // Flytta visuell representation av objektet (placeholder) till beröringskoordinater
   movePlaceholder(touch.clientX, touch.clientY);
+
+  // Hitta den cell som pekaren är över
   touchElement = document
     .elementFromPoint(touch.clientX, touch.clientY)
-    .closest(".cell");
+    ?.closest(".cell");
 }
+
 function handleTouchEnd(event) {
   const touch = Array.from(event.changedTouches).find(
     (t) => t.identifier === activeTouchId
@@ -387,10 +393,9 @@ function createPlaceholder(src) {
 function movePlaceholder(x, y) {
   if (!placeholder) return; // Kontrollera om placeholder finns innan du ändrar position
 
-  window.requestAnimationFrame(() => {
-    placeholder.style.left = `${x - placeholder.width / 2}px`;
-    placeholder.style.top = `${y - placeholder.height / 2}px`;
-  });
+  // Placera objektet i rätt position baserat på pekkoordinater
+  placeholder.style.left = `${x - placeholder.width / 2}px`;
+  placeholder.style.top = `${y - placeholder.height / 2}px`;
 }
 
 function throttle(func, limit) {
