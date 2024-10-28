@@ -132,9 +132,11 @@ function createBoard() {
     board.addEventListener("dragover", handleDragOver);
     board.addEventListener("drop", handleDrop);
     board.addEventListener("dragend", handleDragEnd);
-    board.addEventListener("touchstart", handleTouchStart, { passive: true });
-    board.addEventListener("touchmove", handleTouchMove, { passive: true });
-    board.addEventListener("touchend", handleTouchEnd), { passive: true };
+    // Ändra de berörda delarna av koden i script.js
+    board.addEventListener("touchstart", handleTouchStart, { passive: false });
+    board.addEventListener("touchmove", handleTouchMove, { passive: false });
+    board.addEventListener("touchend", handleTouchEnd, { passive: false });
+
     board.appendChild(cell);
   }
 }
