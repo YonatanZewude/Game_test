@@ -54,10 +54,6 @@ const isMobile =
   /Mobi|Android|iPhone|iPad|iPod|Windows Phone/i.test(navigator.userAgent);
 
 window.onload = function () {
-  document.addEventListener("contextmenu", function (event) {
-    event.preventDefault();
-  });
-
   document.querySelectorAll("img").forEach((img) => {
     img.addEventListener(
       "touchstart",
@@ -269,6 +265,7 @@ function handleDragEnd(event) {
 function returnEmojiToOriginalCell() {
   originalCell.querySelector("img").style.visibility = "visible";
 }
+
 function handleTouchStart(event) {
   if (event.touches.length > 1) return;
 
@@ -287,8 +284,13 @@ function handleTouchStart(event) {
       originalCell = draggedElement;
       imgElement.style.visibility = "hidden";
 
+      if (placeholder) {
+        placeholder.remove();
+      }
+
       placeholder = createPlaceholder(originalContent);
       document.body.appendChild(placeholder);
+      console.log("Placeholder created:", placeholder);
       movePlaceholder(touch.clientX, touch.clientY);
     } else {
       console.error("Inget <img> element hittades i den valda cellen.");
@@ -399,6 +401,7 @@ function createPlaceholder(src) {
   placeholder.style.pointerEvents = "none";
   return placeholder;
 }
+
 // // Update the progress bar based on remaining moves
 // function updateProgressBarBasedOnMoves() {
 //   const progressPercentage =
@@ -409,8 +412,17 @@ function createPlaceholder(src) {
 // }
 
 function movePlaceholder(x, y) {
-  placeholder.style.left = `${x - placeholder.width / 2}px`;
-  placeholder.style.top = `${y - placeholder.height / 2}px`;
+  if (!placeholder) {
+    console.error("Placeholder saknas. Kan inte flytta den.");
+    return;
+  }
+
+  window.requestAnimationFrame(() => {
+    if (placeholder) {
+      placeholder.style.left = `${x - placeholder.width / 2}px`;
+      placeholder.style.top = `${y - placeholder.height / 2}px`;
+    }
+  });
 }
 
 function throttle(func, limit) {
