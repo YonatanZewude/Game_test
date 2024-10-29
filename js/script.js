@@ -355,11 +355,12 @@ function createPlaceholder(src) {
 }
 
 function movePlaceholder(x, y) {
-  if (placeholder) {
-    placeholder.style.left = `${x - placeholder.width / 2}px`;
-    placeholder.style.top = `${y - placeholder.height / 2}px`;
+  placeholder.style.left = `${x - placeholder.width / 2}px`;
+  placeholder.style.top = `${y - placeholder.height / 2}px`;
+  if (!placeholder) {
+    console.error("Placeholder saknas. Kan inte flytta den.");
+    return;
   }
-}
 
 function throttle(func, limit) {
   let inThrottle;
