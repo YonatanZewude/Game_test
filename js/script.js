@@ -65,39 +65,6 @@ window.onload = function () {
   });
 };
 
-// const moveButton = document.getElementById("Limited_number_of_moves");
-// moveButton.addEventListener("click", () => {
-//   gameMode = "Version 1";
-//   resetGameVersion1();
-// });
-
-// const scoreButton = document.getElementById("Unlimited_number_of_moves");
-// scoreButton.addEventListener("click", () => {
-//   gameMode = "Version2";
-//   initVersion2();
-// });
-function initVersion3() {
-  gameMode = "Version3";
-  score = 0;
-  moves = Infinity; // Sätt obegränsat antal drag om du vill
-
-  movesSection.style.display = "none"; // Dölj moves-sektionen om den inte används
-  goalsSection.style.display = "none"; // Dölj goals-sektionen om den inte används
-
-  scoreDisplay.textContent = score;
-  createBoard(); // Skapa spelbrädet
-}
-
-function refillEmptyCells() {
-  const emptyCells = document.querySelectorAll(".cell img[src='']");
-  emptyCells.forEach((imgElement) => {
-    imgElement.src = getRandomEmoji(); // Ersätt med en slumpmässig emoji
-  });
-}
-
-const version3Button = document.getElementById("Version3Button");
-version3Button.addEventListener("click", initVersion3);
-
 function switchGameMode() {
   if (gameMode === "Version 1") {
     initVersion2();
@@ -229,21 +196,9 @@ function handleDrop(event) {
     targetCell.addEventListener("animationend", removeMatchedClass);
     targetCell.addEventListener("transitionend", removeMatchedClass);
 
-    if (gameMode === "Version3") {
-      // Gör cellerna tomma istället för att fylla dem med nya bilder
-      originalCell.querySelector("img").src = "";
-      targetCell.querySelector("img").src = "";
-
-      // Kontrollera om den matchade bilden är "imagePaths.drink"
-      if (draggedEmoji === imagePaths.drink) {
-        refillEmptyCells();
-      }
-    } else {
-      // För övriga versioner, sätt nya bilder som tidigare
-      const nextEmojis = getNextTwoEmojis(draggedEmoji);
-      originalCell.querySelector("img").src = nextEmojis[0];
-      targetCell.querySelector("img").src = nextEmojis[1];
-    }
+    const nextEmojis = getNextTwoEmojis(draggedEmoji);
+    originalCell.querySelector("img").src = nextEmojis[0];
+    targetCell.querySelector("img").src = nextEmojis[1];
 
     checkGameOver();
   } else {
@@ -265,7 +220,6 @@ function handleDragEnd(event) {
 function returnEmojiToOriginalCell() {
   originalCell.querySelector("img").style.visibility = "visible";
 }
-
 function handleTouchStart(event) {
   if (event.touches.length > 1) return;
 
@@ -284,13 +238,8 @@ function handleTouchStart(event) {
       originalCell = draggedElement;
       imgElement.style.visibility = "hidden";
 
-      if (placeholder) {
-        placeholder.remove();
-      }
-
       placeholder = createPlaceholder(originalContent);
       document.body.appendChild(placeholder);
-      console.log("Placeholder created:", placeholder);
       movePlaceholder(touch.clientX, touch.clientY);
     } else {
       console.error("Inget <img> element hittades i den valda cellen.");
@@ -402,27 +351,9 @@ function createPlaceholder(src) {
   return placeholder;
 }
 
-// // Update the progress bar based on remaining moves
-// function updateProgressBarBasedOnMoves() {
-//   const progressPercentage =
-//     ((MaxMovesAndGoalScore - moves) / MaxMovesAndGoalScore) * 100;
-//   document.getElementById(
-//     "progress-bar"
-//   ).style.width = `${progressPercentage}%`;
-// }
-
 function movePlaceholder(x, y) {
-  if (!placeholder) {
-    console.error("Placeholder saknas. Kan inte flytta den.");
-    return;
-  }
-
-  window.requestAnimationFrame(() => {
-    if (placeholder) {
-      placeholder.style.left = `${x - placeholder.width / 2}px`;
-      placeholder.style.top = `${y - placeholder.height / 2}px`;
-    }
-  });
+  placeholder.style.left = `${x - placeholder.width / 2}px`;
+  placeholder.style.top = `${y - placeholder.height / 2}px`;
 }
 
 function throttle(func, limit) {
@@ -469,10 +400,6 @@ function incrementScore(matchedEmoji) {
     ];
   document.getElementById("score").textContent = score;
 
-  // document.getElementById("progress-bar").style.width = `${
-  //   (score / MaxMovesAndGoalScore) * 100
-  // }%`;
-
   checkGameOver();
 }
 
@@ -490,9 +417,6 @@ function resetGameVersion2() {
 
   createBoard();
 }
-
-// Function call to start Version2 game manually
-//initVersion2();
 
 function resetGame() {
   location.reload();
