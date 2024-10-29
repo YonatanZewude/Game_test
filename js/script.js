@@ -220,12 +220,14 @@ function handleDragEnd(event) {
 function returnEmojiToOriginalCell() {
   originalCell.querySelector("img").style.visibility = "visible";
 }
+
 function handleTouchStart(event) {
   if (event.touches.length > 1) return;
 
   const touch = event.touches[0];
   activeTouchId = touch.identifier;
 
+  // Identify the cell element at the touch point
   draggedElement = document
     .elementFromPoint(touch.clientX, touch.clientY)
     ?.closest(".cell");
@@ -236,27 +238,27 @@ function handleTouchStart(event) {
     if (imgElement) {
       originalContent = imgElement.src;
       originalCell = draggedElement;
-      imgElement.style.visibility = "hidden";
+      imgElement.style.visibility = "hidden"; // Hide the image in the original cell
 
       placeholder = createPlaceholder(originalContent);
       document.body.appendChild(placeholder);
-      movePlaceholder(touch.clientX, touch.clientY);
+      movePlaceholder(touch.clientX, touch.clientY); // Position the placeholder initially
     } else {
-      console.error("Inget <img> element hittades i den valda cellen.");
+      console.error("No <img> element found in the selected cell.");
     }
   }
 }
-
 function handleTouchMove(event) {
-  event.preventDefault();
+  event.preventDefault(); // Prevent default scrolling or other actions
 
   const touch = Array.from(event.touches).find(
     (t) => t.identifier === activeTouchId
   );
   if (!touch) return;
 
-  movePlaceholder(touch.clientX, touch.clientY);
+  movePlaceholder(touch.clientX, touch.clientY); // Update the placeholder position as the touch moves
 
+  // Identify the cell that the user is currently touching
   touchElement = document
     .elementFromPoint(touch.clientX, touch.clientY)
     ?.closest(".cell");
@@ -268,6 +270,7 @@ function handleTouchEnd(event) {
   );
   if (!touch) return;
 
+  // Check if the touched cell matches the original cell
   removeAllMatchedClasses();
 
   if (touchElement && touchElement !== originalCell) {
@@ -352,8 +355,10 @@ function createPlaceholder(src) {
 }
 
 function movePlaceholder(x, y) {
-  placeholder.style.left = `${x - placeholder.width / 2}px`;
-  placeholder.style.top = `${y - placeholder.height / 2}px`;
+  if (placeholder) {
+    placeholder.style.left = `${x - placeholder.width / 2}px`;
+    placeholder.style.top = `${y - placeholder.height / 2}px`;
+  }
 }
 
 function throttle(func, limit) {
