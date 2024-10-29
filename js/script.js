@@ -222,9 +222,9 @@ function returnEmojiToOriginalCell() {
 }
 
 function handleTouchStart(event) {
-  if (event.touches.length > 1) return;
+  if (event.touches.length > 1) return; // Ignore if there are multiple touches
 
-  const touch = event.touches[0];
+  const touch = event.touches[0]; // Get the first touch point
   activeTouchId = touch.identifier;
 
   // Identify the cell element at the touch point
@@ -240,6 +240,7 @@ function handleTouchStart(event) {
       originalCell = draggedElement;
       imgElement.style.visibility = "hidden"; // Hide the image in the original cell
 
+      // Create a placeholder element and set its initial position
       placeholder = createPlaceholder(originalContent);
       document.body.appendChild(placeholder);
       movePlaceholder(touch.clientX, touch.clientY); // Position the placeholder initially
@@ -248,6 +249,15 @@ function handleTouchStart(event) {
     }
   }
 }
+
+function movePlaceholder(x, y) {
+  if (placeholder) {
+    // Center the placeholder under the finger by subtracting half its width and height
+    placeholder.style.left = `${x - placeholder.offsetWidth / 2}px`;
+    placeholder.style.top = `${y - placeholder.offsetHeight / 2}px`;
+  }
+}
+
 function handleTouchMove(event) {
   event.preventDefault(); // Prevent default scrolling or other actions
 
