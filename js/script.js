@@ -222,12 +222,12 @@ function returnEmojiToOriginalCell() {
 }
 
 function handleTouchStart(event) {
-  if (event.touches.length > 1) return; // Ignore if there are multiple touches
+  if (event.touches.length > 1) return; // Ignore multi-touch
 
   const touch = event.touches[0]; // Get the first touch point
   activeTouchId = touch.identifier;
 
-  // Identify the cell element at the touch point
+  // Identify the cell element at the touch point using accurate touch coordinates
   draggedElement = document
     .elementFromPoint(touch.clientX, touch.clientY)
     ?.closest(".cell");
@@ -240,10 +240,11 @@ function handleTouchStart(event) {
       originalCell = draggedElement;
       imgElement.style.visibility = "hidden"; // Hide the image in the original cell
 
-      // Create a placeholder element and set its initial position
       placeholder = createPlaceholder(originalContent);
       document.body.appendChild(placeholder);
-      movePlaceholder(touch.clientX, touch.clientY); // Position the placeholder initially
+
+      // Position the placeholder initially using touch coordinates
+      movePlaceholder(touch.clientX, touch.clientY);
     } else {
       console.error("No <img> element found in the selected cell.");
     }
@@ -257,18 +258,18 @@ function movePlaceholder(x, y) {
     placeholder.style.top = `${y - placeholder.offsetHeight / 2}px`;
   }
 }
-
 function handleTouchMove(event) {
-  event.preventDefault(); // Prevent default scrolling or other actions
+  event.preventDefault(); // Prevent default actions like scrolling
 
   const touch = Array.from(event.touches).find(
     (t) => t.identifier === activeTouchId
   );
   if (!touch) return;
 
-  movePlaceholder(touch.clientX, touch.clientY); // Update the placeholder position as the touch moves
+  // Update the placeholder's position based on the touch coordinates
+  movePlaceholder(touch.clientX, touch.clientY);
 
-  // Identify the cell that the user is currently touching
+  // Identify the cell under the current touch point
   touchElement = document
     .elementFromPoint(touch.clientX, touch.clientY)
     ?.closest(".cell");
@@ -280,9 +281,7 @@ function handleTouchEnd(event) {
   );
   if (!touch) return;
 
-  // Check if the touched cell matches the original cell
-  removeAllMatchedClasses();
-
+  // If a valid cell is touched and it's not the original cell, proceed with the drop logic
   if (touchElement && touchElement !== originalCell) {
     const draggedEmojiFile = originalContent.split("/").pop();
     const targetEmojiFile = touchElement
@@ -366,8 +365,9 @@ function createPlaceholder(src) {
 
 function movePlaceholder(x, y) {
   if (placeholder) {
-    placeholder.style.left = `${x - placeholder.width / 2}px`;
-    placeholder.style.top = `${y - placeholder.height / 2}px`;
+    // Center the placeholder under the finger by subtracting half its width and height
+    placeholder.style.left = `${x - placeholder.offsetWidth / 2}px`;
+    placeholder.style.top = `${y - placeholder.offsetHeight / 2}px`;
   }
 }
 
