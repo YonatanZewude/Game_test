@@ -20,6 +20,8 @@ const emojiSequence = [
   imagePaths.drink,
 ];
 
+console.log( "test");
+
 const scoreValues = {
   [imagePaths.blueberry]: 1,
   [imagePaths.strawberry]: 2,
